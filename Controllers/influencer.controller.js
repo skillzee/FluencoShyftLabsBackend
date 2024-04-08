@@ -79,7 +79,7 @@ const getAllInfluencers = async(req,res)=>{
 
 
 const getInfluencer = async(req,res)=>{
-    // try {
+    try {
         const {id} = req.params
         console.log(id);
         const influencer = await Influencers.findById(id)
@@ -87,10 +87,30 @@ const getInfluencer = async(req,res)=>{
         return res.status(201).json(
             new ApiResponse(200, influencer, "Influencer Found")
         )
-    // } catch (error) {
-    //     throw new ApiError(400, "Not able to find the influencer")
-    // }
+    } catch (error) {
+        throw new ApiError(400, "Not able to find the influencer")
+    }
 }
 
 
-module.exports = {getInfluencer, getAllInfluencers, registerInfluencer}
+const deleteInfluencer = async(req,res)=>{
+    try {
+        const {id} = req.params
+        const influencer = await Influencers.findById(id)
+        if(!id){
+            throw new ApiError(400, "Not able to find the influencer")
+        }
+        
+        await influencer.deleteOne(influencer);
+    
+        return res.status(201).json(
+            new ApiResponse(200, "Influencer Deleted")
+        )
+    } catch (error) {
+        throw new ApiError(400, "Not able to find the influencer")
+    }
+
+}
+
+
+module.exports = {getInfluencer, getAllInfluencers, registerInfluencer, deleteInfluencer}
