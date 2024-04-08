@@ -1,17 +1,17 @@
-import { Influencers } from "../Models/influencers.model.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 
-export const addInfluencer = async(req,res)=>{
+const addInfluencer = async(req,res)=>{
+
+}
+
+const getAllInfluencers = async(req,res)=>{
 
 }
 
 
-export const getAllInfluencers = async(req,res)=>{
+const getInfluencer = async(req,res)=>{
 
 }
 
 
-export const getInfluencer = async(req,res)=>{
-    
-}
+module.exports = {getAllInfluencers, getInfluencer, addInfluencer}

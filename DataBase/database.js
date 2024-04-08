@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose")
 
 
-export const dbConnect = () =>{
+const dbConnect = () =>{
     mongoose.connect(process.env.MONGO_URI,{
     dbName: process.env.DB_NAME,
 }).then((c)=>{
@@ -10,3 +10,6 @@ export const dbConnect = () =>{
     console.log(e);
 })
 }
+
+
+module.exports = {dbConnect}

@@ -1,5 +1,8 @@
-import { dbConnect } from "./DataBase/database.js";
-import { app } from "./app.js";
+// import { dbConnect } from "./DataBase/database.js";
+// import { app } from "./app.js";
+
+const app = require("./app.js").app
+const dbConnect = require("./DataBase/database.js").dbConnect
 
 
 const port = process.env.PORT

@@ -1,13 +1,13 @@
-import { Coupons } from "../Models/coupons.model.js";
-
-
-export const addCoupon  = async(req,res)=>{
+const addCoupon  = async(req,res)=>{
 
 
     
 }
-export const getAllCoupons  = async(req,res)=>{
+const getAllCoupons  = async(req,res)=>{
 
 
 
 }
+
+
+module.exports = {getAllCoupons, addCoupon}
