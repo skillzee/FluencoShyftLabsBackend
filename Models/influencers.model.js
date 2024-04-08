@@ -10,6 +10,17 @@ const influencerSchema = new mongoose.Schema({
         type: String, //This will be a url from cloudinary
         required: true,
     },
+    username:{
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true,
+    },
+    email:{
+        type: String,
+        required: true
+    },
     category:{
         type: String,
         required: true,
@@ -25,7 +36,22 @@ const influencerSchema = new mongoose.Schema({
     },
     youtubeFollowers:{
         type: String
-    }
+    },
+    refreshToken:{
+        type:String,
+        select: false
+    },
+    password:{
+        type: String, 
+        required: true,
+        select: false
+    },
+    coupons:[{
+        type: mongoose.Types.ObjectId,
+        ref: "Coupon"
+    }]
 }, {timestamps: true})
 
-export const Influencers = mongoose.model("Influencer", influencerSchema)
+const Influencers = mongoose.model("Influencer", influencerSchema)
+
+module.exports ={Influencers}

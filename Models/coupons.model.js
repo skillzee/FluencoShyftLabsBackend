@@ -17,6 +17,10 @@ const couponSchema = new mongoose.Schema({
     expiry:{
         type: String,
         required: true
+    },
+    influencer:{
+        type: mongoose.Types.ObjectId,
+        ref: "Influencer"
     }
 }, {timestamps: true})
 
