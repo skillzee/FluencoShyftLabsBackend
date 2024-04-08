@@ -3,6 +3,7 @@ const { ApiError } = require("../utils/apiError")
 const { ApiResponse } = require("../utils/apiResponse.js")
 const { uploadOnCloudinary } = require("../utils/cloudinary.js")
 const bcrypt = require("bcrypt")
+const { generateAccessAndRefresTokens } = require("../utils/tokens.js")
 
 
 const registerInfluencer = async(req,res)=>{
@@ -113,4 +114,53 @@ const deleteInfluencer = async(req,res)=>{
 }
 
 
-module.exports = {getInfluencer, getAllInfluencers, registerInfluencer, deleteInfluencer}
+const loginInfluencer = async(req,res)=>{
+    const{username, email, password} = req.body
+    console.log(username, email, password);
+    if(!username && !email){
+        throw new ApiError(400, "Username or email is required")
+    }
+    const influencer = await Influencers.findOne({
+        $or: [{username}, {email}]
+    }).select("+password +refreshToken")
+
+
+    if(!influencer){
+        throw new ApiError(404, "User does not exist")
+    }
+
+    const isPasswordValid = bcrypt.compare(password, influencer.password)
+
+    if(!isPasswordValid){
+        throw new ApiError(401, "Invalid user credentials")
+    }    
+
+    const {accessToken, refreshToken} = await  generateAccessAndRefresTokens(influencer._id)
+
+    const loggedInInfluencer = await Influencers.findById(influencer._id)
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refresToken", refreshToken, options)
+    .json(
+        new ApiResponse(
+            200,
+            {
+                influencer: loggedInInfluencer, accessToken, refreshToken
+            },
+            "influencer logged In Successfully"
+        )
+    )
+     
+
+
+}
+
+
+module.exports = {getInfluencer, getAllInfluencers, registerInfluencer, deleteInfluencer, loginInfluencer}

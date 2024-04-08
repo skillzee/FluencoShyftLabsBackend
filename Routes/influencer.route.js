@@ -3,7 +3,7 @@
 // import { addInfluencer, getAllInfluencers, getInfluencer } from "../Controllers/influencer.controller.js";
 const express = require("express")
 const {upload} = require("../middleWare/multer.middleware.js")
-const { getAllInfluencers, getInfluencer, registerInfluencer, deleteInfluencer} = require("../Controllers/influencer.controller.js")
+const { getAllInfluencers, getInfluencer, registerInfluencer, deleteInfluencer, loginInfluencer} = require("../Controllers/influencer.controller.js")
 
 
 const router = express.Router();
@@ -19,6 +19,7 @@ router.route("/api/v1/registerInfluencer").post(
     registerInfluencer
 )
 
+router.route("/api/v1/loginInfluencer").get(loginInfluencer)
 router.route("/api/v1/getAllInfluencers").get(getAllInfluencers)
 router.route("/api/v1/getInfluencer/:id").get(getInfluencer)
 router.route("/api/v1/deleteInfluencer/:id").delete(deleteInfluencer)
