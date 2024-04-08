@@ -14,7 +14,7 @@ const couponSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    validTill:{
+    expiry:{
         type: String,
         required: true
     }
@@ -23,4 +23,6 @@ const couponSchema = new mongoose.Schema({
 
 
 
-export const Coupons = mongoose.model("Coupon", couponSchema)
+const Coupons = mongoose.model("Coupon", couponSchema)
+
+module.exports = {Coupons}
