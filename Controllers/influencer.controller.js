@@ -73,13 +73,23 @@ const getAllInfluencers = async(req,res)=>{
             new ApiResponse(200, influencers, "All Influencers achieved successfully")
         )
     } catch (error) {
-        throw new ApiError(400, "Not able to get the users")
+        throw new ApiError(400, "Not able to get the Influencers")
     }
 }
 
 
 const getInfluencer = async(req,res)=>{
-
+    // try {
+        const {id} = req.params
+        console.log(id);
+        const influencer = await Influencers.findById(id)
+    
+        return res.status(201).json(
+            new ApiResponse(200, influencer, "Influencer Found")
+        )
+    // } catch (error) {
+    //     throw new ApiError(400, "Not able to find the influencer")
+    // }
 }
 
 
