@@ -2,7 +2,7 @@ import { dbConnect } from "./DataBase/database.js";
 import { app } from "./app.js";
 
 
-const port = 3000
+const port = process.env.PORT
 
 
 

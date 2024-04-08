@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 
 export const dbConnect = () =>{
-    mongoose.connect("mongodb+srv://skillzee:parth123@shyftlabs.g4azhzh.mongodb.net/",{
-    dbName: "FluencoShyftLabs",
+    mongoose.connect(process.env.MONGO_URI,{
+    dbName: process.env.DB_NAME,
 }).then((c)=>{
-    console.log(`Database connected`);
+    console.log(`Database connected on ${c.connection.host}`);
 }).catch((e)=>{
     console.log(e);
 })
