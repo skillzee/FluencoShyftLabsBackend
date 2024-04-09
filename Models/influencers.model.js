@@ -31,12 +31,6 @@ const influencerSchema = new mongoose.Schema({
     instagramLink:{
         type: String
     },
-    instagramFollowers:{
-        type: String
-    },
-    youtubeFollowers:{
-        type: String
-    },
     refreshToken:{
         type:String,
         select: false

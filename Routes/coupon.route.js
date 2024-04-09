@@ -9,8 +9,8 @@ const { updateCoupons } = require("../middleWare/updateInfluencerCoupons.js");
 const router = express.Router();
 
 
-router.route("/api/v1/addCoupon").post(verifyJWT, addCoupon, updateCoupons)
-router.route("/api/v1/getCoupons").get(getAllCoupons)
-router.route("/api/v1/deleteCoupon/:id").put(deleteCoupon)
+router.route("/add").post(/*verifyJWT,*/ addCoupon /*, updateCoupons*/)
+router.route("/getCoupons").get(getAllCoupons)
+router.route("/deleteCoupon/:id").put(deleteCoupon)
 
 module.exports = router

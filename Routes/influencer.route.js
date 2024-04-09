@@ -10,7 +10,7 @@ const { verifyJWT } = require("../middleWare/auth.middleware.js");
 const router = express.Router();
 
 
-router.route("/api/v1/registerInfluencer").post(
+router.route("/signup").post(
     upload.fields([
         {
         name: "avatar",
@@ -20,11 +20,11 @@ router.route("/api/v1/registerInfluencer").post(
     registerInfluencer
 )
 
-router.route("/api/v1/loginInfluencer").get(loginInfluencer)
-router.route("/api/v1/logoutInfluencer").get(verifyJWT, logOutInfluencer)
-router.route("/api/v1/getAllInfluencers").get(getAllInfluencers)
-router.route("/api/v1/getInfluencer/:id").get(getInfluencer)
-router.route("/api/v1/deleteInfluencer/:id").delete(deleteInfluencer)
+router.route("/login").get(loginInfluencer)
+router.route("/logout").get(verifyJWT, logOutInfluencer)
+router.route("/getAllInfluencers").get(getAllInfluencers)
+router.route("/getInfluencer/:id").get(getInfluencer)
+router.route("/deleteInfluencer/:id").delete(deleteInfluencer)
 
 
 

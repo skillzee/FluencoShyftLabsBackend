@@ -7,7 +7,7 @@ const { generateAccessAndRefresTokens } = require("../utils/tokens.js")
 
 
 const registerInfluencer = async(req,res)=>{
-    const {name, username, category, password, email, youtubeLink,instagramLink,instagramFollowers,youtubeFollowers} = req.body
+    const {name, username, category, password, email, youtubeLink,instagramLink} = req.body
     if(
         [name, username, category, password].some((field)=> field?.trim() === "")    
     ){
@@ -47,8 +47,6 @@ const registerInfluencer = async(req,res)=>{
         category,
         youtubeLink,
         instagramLink,
-        instagramFollowers,
-        youtubeFollowers,
         password: hashedPassword,
         avatar: avatar?.url || ""
     })
@@ -82,9 +80,14 @@ const getAllInfluencers = async(req,res)=>{
 const getInfluencer = async(req,res)=>{
     try {
         const {id} = req.params
+        if(!id){
+            throw new ApiError(400, "Invalid Influencer Id")
+        }
         console.log(id);
         const influencer = await Influencers.findById(id)
-    
+        if(!influencer){
+            new ApiError(400, "Influencer not found")
+        }
         return res.status(201).json(
             new ApiResponse(200, influencer, "Influencer Found")
         )
@@ -115,48 +118,50 @@ const deleteInfluencer = async(req,res)=>{
 
 
 const loginInfluencer = async(req,res)=>{
-    const{username, email, password} = req.body
-    console.log(username, email, password);
-    if(!username && !email){
-        throw new ApiError(400, "Username or email is required")
-    }
-    const influencer = await Influencers.findOne({
-        $or: [{username}, {email}]
-    }).select("+password +refreshToken")
+    try {
+        const{ email, password} = req.body
+        // console.log(username, email, password);
+        if(!email){
+            throw new ApiError(400, "Email is required")
+        }
+        const influencer = await Influencers.findOne({email}).select("+password +refreshToken")
+    
+    
+        if(!influencer){
+            throw new ApiError(404, "User does not exist")
+        }
+    
+        const isPasswordValid = bcrypt.compare(password, influencer.password)
+    
+        if(!isPasswordValid){
+            throw new ApiError(401, "Invalid user credentials")
+        }    
+    
+        const {accessToken, refreshToken} = await  generateAccessAndRefresTokens(influencer._id)
+    
+        const loggedInInfluencer = await Influencers.findById(influencer._id)
+    
+        const options = {
+            httpOnly: true,
+            secure: true
+        }
 
-
-    if(!influencer){
-        throw new ApiError(404, "User does not exist")
-    }
-
-    const isPasswordValid = bcrypt.compare(password, influencer.password)
-
-    if(!isPasswordValid){
-        throw new ApiError(401, "Invalid user credentials")
-    }    
-
-    const {accessToken, refreshToken} = await  generateAccessAndRefresTokens(influencer._id)
-
-    const loggedInInfluencer = await Influencers.findById(influencer._id)
-
-    const options = {
-        httpOnly: true,
-        secure: true
-    }
-
-    return res
-    .status(200)
-    .cookie("accessToken", accessToken, options)
-    .cookie("refresToken", refreshToken, options)
-    .json(
-        new ApiResponse(
-            200,
-            {
-                influencer: loggedInInfluencer, accessToken, refreshToken
-            },
-            "influencer logged In Successfully"
+        return res
+        .status(200)
+        .cookie("accessToken", accessToken, options)
+        .cookie("refresToken", refreshToken, options)
+        .json(
+            new ApiResponse(
+                200,
+                {
+                    influencer: loggedInInfluencer, accessToken, refreshToken
+                },
+                "influencer logged In Successfully"
+            )
         )
-    )
+    } catch (error) {
+        throw new ApiError(400, "Log In Failed")
+    }
      
 
 

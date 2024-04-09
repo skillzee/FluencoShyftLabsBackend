@@ -21,8 +21,8 @@ app.use(express.json())
 app.use(cookieParser())
 
 
-app.use("/influencer", influencerRouter)
-app.use("/coupons", couponRouter)
+app.use("/api/creator", influencerRouter)
+app.use("/api/coupon", couponRouter)
 
 app.get("/", (req,res)=>{
     res.send("Server Working Properly")

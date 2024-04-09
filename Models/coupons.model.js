@@ -2,7 +2,7 @@ const mongoose = require("mongoose")
 
 
 const couponSchema = new mongoose.Schema({
-    title:{
+    brandName:{
         type: String,
         required: true
     },
@@ -19,11 +19,19 @@ const couponSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    influencer:{
-        type: mongoose.Types.ObjectId,
-        required: true,
-        ref: "Influencer"
+    websiteLink:{
+        type: String,
+        required: true
+    },
+    termsCondition:{
+        type: String,
+        required: true
     }
+    // influencer:{
+    //     type: mongoose.Types.ObjectId,
+    //     required: true,
+    //     ref: "Influencer"
+    // }
 }, {timestamps: true})
 
 
