@@ -163,4 +163,29 @@ const loginInfluencer = async(req,res)=>{
 }
 
 
-module.exports = {getInfluencer, getAllInfluencers, registerInfluencer, deleteInfluencer, loginInfluencer}
+const logOutInfluencer = async(req,res)=>{
+    await Influencers.findByIdAndUpdate(
+        req.influencer._id,
+        {
+            $set:{
+                refreshToken: undefined
+            }
+        },
+        {
+            new: true
+        }
+    )
+
+    const options = {
+        httpOnly: true,
+        secure: true
+    }
+
+    return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refresToken", options)
+    .json(new ApiResponse(200,{}, "Influencer Logged Out SuccessFully"))
+}
+
+module.exports = {getInfluencer, getAllInfluencers, registerInfluencer, deleteInfluencer, loginInfluencer, logOutInfluencer}
