@@ -249,6 +249,8 @@ const updateInfluencer = async (req, res) => {
             throw new ApiError(400, "Username already exists");
         }
 
+        console.log(category);
+
         const influencer = await Influencers.findByIdAndUpdate(
             id,
             {
