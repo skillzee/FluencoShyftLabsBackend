@@ -20,7 +20,7 @@ router.route("/signup").post(
     registerInfluencer
 )
 
-router.route("/login").get(loginInfluencer)
+router.route("/login").get(upload.none(),loginInfluencer)
 router.route("/logout").get(verifyJWT, logOutInfluencer)
 router.route("/getAllInfluencers").get(getAllInfluencers)
 // Updation routes:-
