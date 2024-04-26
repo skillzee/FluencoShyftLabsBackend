@@ -7,10 +7,18 @@ const influencerRouter = require("./Routes/influencer.route.js")
 const couponRouter = require("./Routes/coupon.route.js")
 const cookieParser = require("cookie-parser")
 const config = require("dotenv").config
+const cors = require("cors")
 
 const app = express()
 
 module.exports = { app };
+
+
+
+app.use(cors())
+app.use(express.static("public"))
+
+app.use(express.urlencoded({extended: true, limit: "16kb"}))
 
 
 config({

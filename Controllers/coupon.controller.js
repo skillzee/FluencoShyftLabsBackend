@@ -45,7 +45,10 @@ const addCoupon  = async(req,res,/*next*/)=>{
         )
         // next()
     } catch (error) {
-        throw new ApiError(400, "Error in adding a Coupon")
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
     
 }
@@ -56,7 +59,10 @@ const getAllCoupons  = async(req,res)=>{
             new ApiResponse(200, coupons, "All coupons recieved")
         )
     } catch (error) {
-        throw new ApiError(400, "Coupons not found")
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 
 }
@@ -78,7 +84,10 @@ const deleteCoupon = async(req,res)=>{
 
 
     } catch (error) {
-        throw new ApiError(400, "Cannot delete the Coupon")
+        res.status(500).json({
+            success: false,
+            message: error.message
+        })
     }
 }
 
