@@ -8,7 +8,7 @@ const influencerSchema = new mongoose.Schema({
     },
     avatar:{
         type: String, //This will be a url from cloudinary
-        required: true,
+        // required: true,
     },
     username:{
         type: String,

@@ -6,70 +6,49 @@ const bcrypt = require("bcrypt")
 const { generateAccessAndRefresTokens } = require("../utils/tokens.js")
 
 
-const registerInfluencer = async(req,res)=>{
+const registerInfluencer = async (req, res) => {
     try {
-        const {name, username, category, password, email, youtubeLink,instagramLink} = req.body
-    if(
-        [name, username, category, password].some((field)=> field?.trim() === "")    
-    ){
-        throw new ApiError(400, "Name, username, category, password are required fields")
-    }
+        const { name, username, category, password, email, youtubeLink, instagramLink } = req.body;
 
-    const existedUser = await Influencers.findOne({
-        $or: [{ username }, { email }]
-    })
+        if ([name, username, category, password].some((field) => !field || field.trim() === "")) {
+            throw new ApiError(400, "Name, username, category, password are required fields");
+        }
 
-    if(existedUser){
-        throw new ApiError(409, "User already exists")
-    }
+        const existedUser = await Influencers.findOne({ $or: [{ username }, { email }] });
+        if (existedUser) {
+            throw new ApiError(409, "User already exists");
+        }
 
-    const avatarLocalPath = req.files?.avatar[0]?.path
-    
-
-    if(!avatarLocalPath){
-        throw new ApiError(400, "Avatar file is required")
-    }
-    // console.log(avatarLocalPath);
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    // console.log(avatar);
-    console.log(process.env.CLOUDINARY_CLOUD_NAME);
-    console.log(process.env.CLOUDINARY_API_KEY);
-    console.log(process.env.CLOUDINARY_API_SECRET);
-    if(!avatar){
-        throw new ApiError(400, "Avatar file is required")
-    }
-    const hashedPassword = await bcrypt.hash(password, 10)
+        let avatarUrl = "";
+        if (req.files && req.files.avatar && req.files.avatar[0] && req.files.avatar[0].path) {
+            const avatarLocalPath = req.files.avatar[0].path;
+            const avatar = await uploadOnCloudinary(avatarLocalPath);
+            if (!avatar) {
+                throw new ApiError(400, "Failed to upload avatar");
+            }
+            avatarUrl = avatar.url;
+        }
 
 
-    const influencer = await Influencers.create({
-        name,
-        username: username.toLowerCase(),
-        email,
-        category,
-        youtubeLink,
-        instagramLink,
-        password: hashedPassword,
-        avatar: avatar?.url || ""
-    })
-    
-    const craetedInfluencer = await Influencers.findById(influencer._id)
+        const hashedPassword = await bcrypt.hash(password, 10);
 
-    if(!craetedInfluencer){
-        throw new ApiError(500, "Something went wrong while registering the Influencer")
+        const influencer = await Influencers.create({
+            name,
+            username: username.toLowerCase(),
+            email,
+            category,
+            youtubeLink,
+            instagramLink,
+            password: hashedPassword,
+            avatar: avatarUrl,
+        });
 
-    }
 
-    return res.status(201).json(
-        new ApiResponse(200, craetedInfluencer, "User registered successfully")
-    )
-   
-    // Error Handling
+        return res.status(201).json(new ApiResponse(200, influencer, "User registered successfully"));
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message
-        })}
+        res.status(500).json({ success: false, message: error.message });
     }
+};
 
 
 const getAllInfluencers = async(req,res)=>{
